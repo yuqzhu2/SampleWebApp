@@ -25,6 +25,8 @@ resource myWebApp 'Microsoft.Web/sites@2021-02-01' = {
     siteConfig: {
       alwaysOn: true
       use32BitWorkerProcess: false
+      // Windows-specific configurations
+      // If servicePlanOs is 'Windows', set netFrameworkVersion and metadata
       netFrameworkVersion: (servicePlanOs == 'Windows') ? 'v8.0' : null // or 'v6.0', 'v4.8', etc.
       metadata: servicePlanOs == 'Windows' ? [
         {
@@ -32,6 +34,8 @@ resource myWebApp 'Microsoft.Web/sites@2021-02-01' = {
           value: 'dotnet'
         }
       ] : null
+      // Linux-specific configurations
+      // If servicePlanOs is 'Linux', set linuxFxVersion
       linuxFxVersion: (servicePlanOs == 'Linux') ? 'dotnet:8' : null
       appSettings: [
         {
