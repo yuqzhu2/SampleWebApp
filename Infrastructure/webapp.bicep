@@ -1,12 +1,16 @@
 
+@description('The name of the resource group where the App Service Plan and Web App will be created.')
+type planos = 'Windows' | 'Linux'
+
+@description('The operating system for the App Service Plan. Choose "Windows" or "Linux", default to "Windows".')
+param servicePlanOs planos = 'Windows'
+
 resource myAppServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
   name: 'yzServicePlan${uniqueString(resourceGroup().id)}'
   location: resourceGroup().location
+  kind: servicePlanOs
   sku: {
     name: 'S1'
-    tier: 'Standard'
-    size: 'S1'
-    family: 'S'
     capacity: 1
   }
 }
@@ -20,6 +24,15 @@ resource myWebApp 'Microsoft.Web/sites@2021-02-01' = {
     httpsOnly: true
     siteConfig: {
       alwaysOn: true
+      use32BitWorkerProcess: false
+      netFrameworkVersion: (servicePlanOs == 'Windows') ? 'v8.0' : null // or 'v6.0', 'v4.8', etc.
+      metadata: servicePlanOs == 'Windows' ? [
+        {
+          name: 'CURRENT_STACK'
+          value: 'dotnet'
+        }
+      ] : null
+      linuxFxVersion: (servicePlanOs == 'Linux') ? 'dotnet:8' : null
       appSettings: [
         {
           name: 'WEBSITE_NODE_DEFAULT_VERSION'
