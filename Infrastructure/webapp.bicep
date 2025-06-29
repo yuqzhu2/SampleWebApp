@@ -5,6 +5,24 @@ type planos = 'Windows' | 'Linux'
 @description('The operating system for the App Service Plan. Choose "Windows" or "Linux", default to "Windows".')
 param servicePlanOs planos = 'Windows'
 
+@description('The SKU name for the App Service Plan. Default is S1.')
+@allowed([
+  'F1' // Free
+  'D1' // Shared
+  'B1' // Basic
+  'B2'
+  'B3'
+  'S1' // Standard
+  'S2'
+  'S3'
+  'P0v3' // Premium v3
+  'P1v3' 
+  'P2v3'
+  'P3v3'
+])
+@defaultValue('P0v3')
+param skuName string = 'P0v3' // Default SKU for the App Service Plan
+
 resource myAppServicePlan 'Microsoft.Web/serverfarms@2021-02-01' = {
   name: 'yzServicePlan${uniqueString(resourceGroup().id)}'
   location: resourceGroup().location

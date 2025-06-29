@@ -1,5 +1,7 @@
 {
     "cSpell.words": [
         "serverfarms"
-    ]
+    ],
+    "appService.defaultWebAppToDeploy": "None",
+    "appService.deploySubpath": "src/mywebapp/bin/publish"
 }
